@@ -2,11 +2,11 @@
 from tkinter import *
 import requests
 import sqlite3
+import os
 
 #TELA PRINCIPAL
 
-
-
+pastaApp = os.path.dirname(__file__)
 
 root = Tk()
 root.geometry('600x500')
@@ -17,7 +17,7 @@ root.title("UZC.co - Gerenciador de Pedidos")
 #===============TITULO E IMAGEM========================================================
 title = Label(text="UZC Company", font="Arial 20")
 logo = PhotoImage(file="logo/uzclogo3.png").subsample(7,7)
-label_logo = Label(image=logo)
+label_logo = Label(root,image=logo)
 
 #===================FUNCOES========================================================
 
@@ -36,21 +36,28 @@ def procura_dolar():
 #==========CADASTRAR PEDIDO===========================
 def cadastrar_pedido():
 
-    tela_cadastro = Tk()
-
-    tela_cadastro.geometry('500x300')
-    tela_cadastro.minsize(500,300)
-    tela_cadastro.maxsize(500, 300)
+    tela_cadastro = Toplevel()
+    tela_cadastro.geometry('600x500')
+    #tela_cadastro.minsize(700,200)
+    #tela_cadastro.maxsize(700, 200)
     tela_cadastro.title("Cadastrando camisa")
-
-    #Titulo da tela de cadastro
+#===============TITULO IMAGEM TELA INICIAL=====================================
     titulo_cadastro = Label(tela_cadastro, text="CADASTRAR", font = "arial 15")
+
+
+    logo_cadastro = PhotoImage(file=pastaApp+"\\logo\\uzclogo3.png").subsample(7,7)
+    label_logo_cadastro = Label(tela_cadastro, image=logo_cadastro)
+
+
 
     camisa_text = Label(tela_cadastro, text="Camisa: ")
     camisa_input = Entry(tela_cadastro)
 
     cliente_text = Label(tela_cadastro, text = "Cliente: ")
     cliente_input = Entry(tela_cadastro)
+
+    tamanho_text = Label(tela_cadastro, text = "Tamanho: ")
+    tamanho_input = Entry(tela_cadastro)
 
 
 
@@ -59,11 +66,19 @@ def cadastrar_pedido():
 
     
 #=====================LAYOUT PAGINA CADASTRO===============================================
-    titulo_cadastro.grid(column=2, row=1)
+    titulo_cadastro.grid(column=4, row=1)
+    label_logo_cadastro.grid(column=4, row = 2)
 
 
-    camisa_text.grid(column=1,row=2)
-    camisa_input.grid(column=2, row=2)
+
+    camisa_text.grid(column=1,row=3)
+    camisa_input.grid(column=2, row=3)
+
+    cliente_text.grid(column=3, row=3)
+    cliente_input.grid(column=4, row=3)
+
+    tamanho_text.grid(column=5, row=3)
+    tamanho_input.grid(column=6, row=3)
 
     
     tela_cadastro.mainloop()

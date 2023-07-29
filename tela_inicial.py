@@ -1,13 +1,18 @@
-
 from tkinter import *
+from tkinter import ttk
 import requests
 import sqlite3
 import os
+
+
+#==================FUNCOES========================================================
+
 #=====================CADASTRAR PEDIDO=====================================================
 def cadastrar_pedido():
         camisa = camisa_input.get()
         cliente = cliente_input.get()
         tamanho = tamanho_input.get()
+    
 
 
     #criar conexao com banco e criar tabela
@@ -73,7 +78,7 @@ def abrir_tela_cadastro():
 
     tela_cadastro.mainloop()
 
-#==================FUNCOES========================================================
+
 
 #==============ACHAR O VALOR DO DOLAR==================
 def procura_dolar():
@@ -102,24 +107,31 @@ title = Label(text="UZC Company", font="Arial 20")
 logo = PhotoImage(file="logo/uzclogo3.png").subsample(7,7)
 label_logo = Label(root,image=logo)
 
-    
 
+#==============TELA PEDIDOS JA CADASTRADOS==============================================
+def abrir_tela_pedidos():
+     tela_pedidos = Toplevel()
+     tela_pedidos.geometry('700x200')
+     tela_pedidos.minsize(700,200)
+     tela_pedidos.maxsize(700,200)
+     tela_pedidos.title("Pedidos")
 
-
-#===============TITULO IMAGEM TELA INICIAL=====================================
-
-
-
-
-     
-
+    #===========================MONTANDO AS COLUNAS=====================================
+     colunas = ttk.Treeview(tela_pedidos, columns = ('Camisa' , 'Cliente', 'Tamanho' ), show = 'headings')
+     colunas.column('Camisa', minwidth=100, width= 400)
+     colunas.column('Cliente', minwidth=100, width=200)
+     colunas.column('Tamanho', minwidth=100, width = 100)
+     colunas.heading('Camisa', text='Camisa')
+     colunas.heading('Cliente', text= 'Cliente')
+     colunas.heading('Tamanho', text = 'Tamanho')
+     colunas.grid()
 
 #================VARIAVEIS PAG INICIAL=================================================================
 dolar = Button(root, text="Verificar Dólar/USD", font="Arial 10", command= procura_dolar)
 
 cadastrar = Button(root, text="CADASTRAR",font="Arial 15", command = abrir_tela_cadastro)
 
-pedidos = Button(root, text="Ver pedidos", font="Arial 15")
+pedidos = Button(root, text="Ver pedidos", font="Arial 15", command = abrir_tela_pedidos)
 
 valor_dolar = Label(root, text="")
 

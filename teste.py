@@ -36,10 +36,13 @@ def cadastrar_pedido():
     #efetivamente cadastrar os jogadores no banco 
         cursor.execute('''CREATE TABLE IF NOT EXISTS registros_camisas(camisa TEXT, cliente TEXT, tamanho TEXT)''')
         cursor.execute("INSERT INTO registros_camisas VALUES (?, ?, ?)", (camisa, cliente, tamanho))
+        
+          
 
     #comitar alterações e fechar conexao com banco 
         banco.commit()
         banco.close()
+        
 
         #==========ABRIR TELA CADASTRO PEDIDO===========================
 def abrir_tela_cadastro():
@@ -109,28 +112,67 @@ def procura_dolar():
     #TELA PRINCIPAL
 
 
-#==============TELA PEDIDOS JA CADASTRADOS==============================================
-def abrir_tela_pedidos():
-     tela_pedidos = Toplevel()
-     tela_pedidos.geometry('700x200')
-     tela_pedidos.minsize(700,200)
-     tela_pedidos.maxsize(700,200)
-     tela_pedidos.title("Pedidos")
+#==============TELA PEDIDOS JA 
+#CADASTRADOS==============================================
 
-#======================CONECTANDO COM BANCO==============================================
+def obter_pedidos():
+    conexao = sqlite3.connect('registros_camisas.db')
+    c = conexao.cursor()
+
+    c.execute('SELECT Camisa, Cliente, Tamanho FROM registros_camisas')
+    resultados = c.fetchall()
+    return resultados     
+
+def deletar_pedidos():
+     banco = sqlite3.connect('registros_camisas.db')
+     c = banco.cursor()
+     c.execute('DELETE FROM registros_camisas ')
+
+     banco.commit()
+     banco.close()
+
+
+def abrir_tela_pedidos():
+    
+    tela_pedidos = Toplevel()
+    tela_pedidos.geometry('800x200')
+    tela_pedidos.minsize(800, 200)
+    tela_pedidos.maxsize(800, 200)
+    tela_pedidos.title("Pedidos")
+
+    deletar = Button(tela_pedidos, text='deletar', command= deletar_pedidos)
+    deletar.grid()
+
+    colunas = ttk.Treeview(tela_pedidos, columns=('Camisa', 'Cliente', 'Tamanho'), show='headings')
     
 
-    #===========================MONTANDO AS COLUNAS=====================================
-     colunas = ttk.Treeview(tela_pedidos, columns = ('Camisa' , 'Cliente', 'Tamanho' ), show = 'headings')
-     colunas.column('Camisa', minwidth=100, width= 400)
-     colunas.column('Cliente', minwidth=100, width=200)
-     colunas.column('Tamanho', minwidth=100, width = 100)
-     colunas.heading('Camisa', text='Camisa')
-     colunas.heading('Cliente', text= 'Cliente')
-     colunas.heading('Tamanho', text = 'Tamanho')
-     colunas.grid()
+    colunas.column('Camisa', minwidth=100, width=400)
+    colunas.column('Cliente', minwidth=100, width=200)
+    colunas.column('Tamanho', minwidth=100, width=100)
+   
 
-     tela_pedidos.mainloop()
+    colunas.heading('Camisa', text='Camisa')
+    colunas.heading('Cliente', text='Cliente')
+    colunas.heading('Tamanho', text='Tamanho')
+
+    
+    colunas.grid()
+    # Obter os dados do banco de dados
+    resultados = obter_pedidos()
+    
+
+    # Adicionar os dados à tabela treeview
+    for camisa, cliente, tamanho in resultados:
+        colunas.insert('', 'end', values=(camisa, cliente, tamanho))     # Adiciona uma célula vazia para o botão
+    
+        
+    tela_pedidos.mainloop()
+    
+
+
+          
+
+
 
 #================VARIAVEIS PAG INICIAL=================================================================
 dolar = Button(root, text="Verificar Dólar/USD", font="Arial 10", command= procura_dolar)

@@ -23,9 +23,7 @@ label_logo = Label(root,image=logo)
 
 #=====================CADASTRAR PEDIDO=====================================================
 def cadastrar_pedido():
-        camisa = camisa_input.get()
-        cliente = cliente_input.get()
-        tamanho = tamanho_input.get()
+
     
 
 
@@ -33,6 +31,9 @@ def cadastrar_pedido():
         banco = sqlite3.connect('registros_camisas.db')
         cursor = banco.cursor()
 
+        camisa = camisa_input.get()
+        cliente = cliente_input.get()
+        tamanho = tamanho_input.get()
     #efetivamente cadastrar os jogadores no banco 
         cursor.execute('''CREATE TABLE IF NOT EXISTS registros_camisas(camisa TEXT, cliente TEXT, tamanho TEXT)''')
         cursor.execute("INSERT INTO registros_camisas VALUES (?, ?, ?)", (camisa, cliente, tamanho))
@@ -108,7 +109,7 @@ def procura_dolar():
     usd = (f'Dolar: {cotacao_dolar} USD')
 
     valor_dolar["text"] = usd
-
+ 
     #TELA PRINCIPAL
 
 
@@ -123,25 +124,43 @@ def obter_pedidos():
     resultados = c.fetchall()
     return resultados     
 
-def deletar_pedidos():
+'''def deletar_pedidos():
      banco = sqlite3.connect('registros_camisas.db')
      c = banco.cursor()
-     c.execute('DELETE FROM registros_camisas ')
+
+
+     c.execute('DELETE FROM registros_camisas')
 
      banco.commit()
-     banco.close()
+     banco.close()'''
+     
+def deletar_pedido():
+        item_selecionado = colunas.selection()[0]
+        camisa_input, cliente_input, tamanho_input = colunas.item(item_selecionado, 'values')
+        
+        conexao = sqlite3.connect('registros_camisas.db')
+        c = conexao.cursor()
 
+        c.execute('DELETE FROM registros_camisas WHERE Camisa=? AND Cliente=? AND Tamanho=?', (camisa_input, cliente_input, tamanho_input))
+
+        conexao.commit()
+        conexao.close()
+
+        colunas.delete(item_selecionado)
+        
 
 def abrir_tela_pedidos():
     
     tela_pedidos = Toplevel()
-    tela_pedidos.geometry('800x200')
-    tela_pedidos.minsize(800, 200)
-    tela_pedidos.maxsize(800, 200)
+    tela_pedidos.geometry('700x200')
+    tela_pedidos.minsize(700, 200)
+    tela_pedidos.maxsize(700, 200)
     tela_pedidos.title("Pedidos")
 
-    deletar = Button(tela_pedidos, text='deletar', command= deletar_pedidos)
-    deletar.grid()
+    deletar = Button(tela_pedidos, text='DELETAR', command= deletar_pedido)
+    deletar.grid(column=1, row = 1, padx = 20, pady = 20)
+    
+    global colunas 
 
     colunas = ttk.Treeview(tela_pedidos, columns=('Camisa', 'Cliente', 'Tamanho'), show='headings')
     
@@ -151,12 +170,12 @@ def abrir_tela_pedidos():
     colunas.column('Tamanho', minwidth=100, width=100)
    
 
-    colunas.heading('Camisa', text='Camisa')
-    colunas.heading('Cliente', text='Cliente')
-    colunas.heading('Tamanho', text='Tamanho')
+    colunas.heading('Camisa', text='CAMISA')
+    colunas.heading('Cliente', text='CLIENTE')
+    colunas.heading('Tamanho', text='TAMANHO')
 
     
-    colunas.grid()
+    colunas.grid(column=1, row = 2)
     # Obter os dados do banco de dados
     resultados = obter_pedidos()
     
@@ -167,7 +186,8 @@ def abrir_tela_pedidos():
     
         
     tela_pedidos.mainloop()
-    
+
+
 
 
           
